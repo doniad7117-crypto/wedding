@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دعوة زفاف: عبدالحكيم & دنيا</title>
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Amiri:ital,wght@0,700;1,400&family=Reem+Kufi:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --dark-purple: #3F2A52; --gold: #BEAEDB; --charcoal: #3a2d34; }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Amiri', serif; background: #000; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        body.locked { overflow: hidden !important; position: fixed; width: 100%; }
+        body.unlocked { overflow-y: auto !important; position: relative; }
+
+        /* الظرف والختم */
+        #envelope-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 9999; display: flex; flex-direction: column; pointer-events: none; }
+        .envelope-half { width: 100%; height: 50.5vh; background: url('15.jpg') no-repeat center center; background-size: cover; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); }
+        .wax-seal { position: absolute; width: 220px; height: 220px; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10001; cursor: pointer; pointer-events: auto; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } }
+
+        .open #half-top { transform: translateY(-100%); }
+        .open #half-bottom { transform: translateY(100%); }
+        .open .wax-seal { opacity: 0; transform: translate(-50%, -50%) scale(0); transition: 0.8s; }
+        #envelope-wrapper.is-hidden { visibility: hidden; transition-delay: 1.8s; }
+
+        /* المحتوى */
+        #main-content { display: none; width: 100%; }
+        .video-section { width: 100%; height: 100vh; position: relative; display: flex; justify-content: center; align-items: center; text-align: center; background: #000; }
+        .bg-video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0.8; }
+        .main-names { font-family: 'Reem Kufi', sans-serif; color: white; font-size: 3.5rem; z-index: 2; text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+
+        /* الخلفية الموحدة مع Blur */
+        .details-wrapper { background: url('2.jpg') no-repeat center center fixed; background-size: cover; position: relative; width: 100%; }
+        .details-wrapper::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(12px); z-index: 0; }
+
+        .page-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; z-index: 1; padding: 60px 0; }
+
+        /* البطاقات الزجاجية */
+        .glass-card { background: rgba(255, 255, 255, 0.9); padding: 45px 25px; width: 85%; max-width: 500px; border-radius: 35px; box-shadow: 0 20px 45px rgba(0,0,0,0.1); border: 1px solid var(--gold); text-align: center; }
+
+        /* النص الأدبي */
+        .literary-text { font-size: 1.35rem; line-height: 2.2; color: #4a3b5a; font-style: italic; }
+        .separator { width: 80px; height: 1px; background: var(--gold); margin: 25px auto; }
+
+        /* الدريس كود */
+        .color-palette { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
+        .color-circle { 
+            width: 70px; height: 70px; border-radius: 50%; border: 4px solid white; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1); position: relative; cursor: pointer; transition: 0.4s;
+        }
+        .color-circle:hover { transform: scale(1.1) rotate(5deg); }
+        .color-circle::after {
+            content: attr(data-label); position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);
+            background: var(--dark-purple); color: white; padding: 6px 12px; border-radius: 8px;
+            font-size: 0.75rem; white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 10;
+        }
+        .color-circle:hover::after { opacity: 1; visibility: visible; bottom: -60px; }
+
+        /* الموقت والخريطة */
+        .countdown-container { display: flex; justify-content: center; gap: 10px; margin: 25px 0; }
+        .time-box { background: var(--dark-purple); color: white; padding: 12px; border-radius: 15px; min-width: 70px; }
+        .time-label { display: block; font-size: 0.7rem; color: var(--gold); margin-top: 4px; }
+        
+        .note-box { background: var(--dark-purple); color: white; padding: 25px; border-radius: 20px; line-height: 1.8; text-align: right; }
+    </style>
+</head>
+<body class="locked">
+
+    <audio id="weddingMusic" loop preload="auto">
+        <source src="vilon.m4a" type="audio/mp4">
+    </audio>
+
+    <div id="envelope-wrapper">
+        <div id="half-top" class="envelope-half"></div>
+        <img src="seal.png" class="wax-seal" onclick="openMe()">
+        <div id="half-bottom" class="envelope-half"></div>
+    </div>
+
+    <div id="main-content">
+        <section class="video-section">
+            <video id="v1" muted loop playsinline class="bg-video">
+                <source src="intro.mp4" type="video/mp4">
+            </video>
+            <h1 class="main-names" data-aos="zoom-in">عبدالحكيم & دنيا</h1>
+        </section>
+
+        <div class="details-wrapper">
+            
+            <section class="page-section">
+                <div class="glass-card" data-aos="fade-up">
+                    <h2 style="font-family: 'Great Vibes'; font-size: 2.8rem; color: var(--dark-purple); margin-bottom: 0;">Our Story</h2>
+                    <div class="separator"></div>
+                    <p class="literary-text">
+                        "يُحكى أنَّ قلباً هامَ بشوقٍ، فتقدَّم شابٌ لخطبةِ مَن كانت لروحهِ سكناً.. هي التي خُلقت من ضلعهِ ليكون لها ستراً وأماناً، وهي التي أُغرم بها عشقاً فكانت لهُ في الدنيا أجملَ عطايا الرحمن."
+                    </p>
+                </div>
+            </section>
+
+            <section class="page-section">
+                <div class="glass-card" data-aos="zoom-in">
+                    <h2 style="font-family: 'Great Vibes'; font-size: 3rem; color: var(--dark-purple); margin: 0;">Dress Code</h2>
+                    <p style="color: #666; margin-top: 10px;">تناغمكم يكمل جمال ليلتنا</p>
+                    <div class="color-palette">
+                        <div class="color-circle" style="background-color: #3F2A52;" data-label="بنفسجي داكن - Dark Purple"></div>
+                        <div class="color-circle" style="background-color: #3a2d34;" data-label="رمادي فحمي - Charcoal"></div>
+                        <div class="color-circle" style="background-color: #beaedb;" data-label="لافندر ناعم - Soft Lavender"></div>
+                        <div class="color-circle" style="background-color: #E6EFF7;" data-label="رمادي فاتح - Pearl White"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page-section">
+                <div class="glass-card" data-aos="fade-up">
+                    <h3 style="color: var(--dark-purple); margin: 0;">ننتظركم في</h3>
+                    <p style="font-size: 1.4rem; letter-spacing: 2px; margin: 10px 0;">27 . 11 . 2026</p>
+                    
+                    <div class="countdown-container">
+                        <div class="time-box"><span id="days">0</span><span class="time-label">يوم</span></div>
+                        <div class="time-box"><span id="hours">0</span><span class="time-label">ساعة</span></div>
+                        <div class="time-box"><span id="mins">0</span><span class="time-label">دقيقة</span></div>
+                    </div>
+
+                    <div class="separator"></div>
+                    <p style="font-weight: bold; color: var(--dark-purple);">📍 صالة مرياج - طريق الشط</p>
+                    <div style="width:100%; height:220px; border-radius:20px; overflow:hidden; border:1px solid var(--gold); margin-top: 15px;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3350.258763538466!2d13.2547144!3d32.891238!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x13a89334547b79a7%3A0xc621643c5b59306b!2z2LXYp9mE2Kkg2YXYsdmK2KfYrCDZhNmE2KfZgdix2KfYrQ!5e0!3m2!1sar!2sly!4v1700000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page-section">
+                <div class="glass-card" data-aos="fade-up" style="margin-bottom: 80px;">
+                    <h3 style="color: var(--dark-purple); margin-bottom: 20px;">ملاحظات تهمنا</h3>
+                    <div class="note-box">
+                        ✨ نرجو منكم عدم التصوير للاحتفاظ بخصوصية هذه الليلة.<br><br>
+                        ✨ نعتذر عن قبول اصطحاب الأطفال، دامت دياركم عامرة بالأفراح.
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1200, once: true });
+
+        function openMe() {
+            const wrapper = document.getElementById('envelope-wrapper');
+            const content = document.getElementById('main-content');
+            const video = document.getElementById('v1');
+            const music = document.getElementById('weddingMusic');
+
+            wrapper.classList.add('open');
+            wrapper.classList.add('is-hidden');
+            content.style.display = 'block';
+
+            if (music) {
+                music.play().catch(e => console.log("Audio play failed"));
+            }
+
+            setTimeout(() => {
+                document.body.classList.remove('locked');
+                document.body.classList.add('unlocked');
+                if (video) video.play();
+                AOS.refresh();
+            }, 1200);
+        }
+
+        const weddingDate = new Date("Nov 27, 2026 18:00:00").getTime();
+        setInterval(function() {
+            const now = new Date().getTime();
+            const diff = weddingDate - now;
+            if(diff > 0) {
+                document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById("mins").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
